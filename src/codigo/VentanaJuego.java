@@ -1,11 +1,9 @@
 /*
- 
-ejercicio  creaddo para explicar los siguientes conceptos
- -ArrayList
- -hilos de ejecucion paralela
- 
-*/
-
+ * Juego de los invasores del espacio
+ejercicio creado para explicar los siguientes conceptos:
+-hilos de ejecucion paralela
+-arrayList
+ */
 package codigo;
 
 import java.awt.Color;
@@ -18,75 +16,75 @@ import javax.swing.Timer;
 
 /**
  *
- * @author Juan Pablo Carpio
+ * @author Joaquin Sierra
  */
 public class VentanaJuego extends javax.swing.JFrame {
-    
+
     static int ANCHOPANTALLA = 600;
-    static int ALTOPANTALLA = 600;
+    static int ALTOPANTALLA = 450;
     
     BufferedImage buffer = null;
-    int contador = 0;
-    Nave miNave = new Nave();
+    int contador=0;
+    Nave miNave = new Nave(ANCHOPANTALLA);
+    Disparo miDisparo = new Disparo(ALTOPANTALLA);
     
-    //bucle de animaciom del juego
-    //en este caso, es un hilo de ejecucion q se encarga 
-    //de refrescar el contenido de la pantalla
+    //bucle de animacion del juego
+    //en este caso, es un hilo de ejecucion que se 
+    //encarga de refrescar el contenido de la pantalla
     
     Timer temporizador = new Timer(10, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            //TODO: codigo de la animacion
-            bucleDelJuego();
+           //TODO codigo de la animacion
+           bucleDelJuego();
         }
     });
     
     
     
+   
     
-    /** Creates new form VentanaJuego */
+    /**
+     * Creates new form VentanaJuego
+     */
     public VentanaJuego() {
         initComponents();
-        setSize(ANCHOPANTALLA + 6, ALTOPANTALLA + 30);
+        setSize(ANCHOPANTALLA+6, ALTOPANTALLA+29);
         buffer = (BufferedImage) jPanel1.createImage(ANCHOPANTALLA, ALTOPANTALLA);
         buffer.createGraphics();
         miNave.x = ANCHOPANTALLA/2 - miNave.imagen.getWidth(this)/2;
-        miNave.y = ALTOPANTALLA - miNave.imagen.getHeight(this) - 10;
-
-        //inicio el temporizador
-        temporizador.start();;
+        miNave.y= ALTOPANTALLA - miNave.imagen.getHeight(this) - 10;
         
+        //inicio el temporizador
+        temporizador.start();
         
     }
-    
-    private void bucleDelJuego(){
+
+    private void  bucleDelJuego(){
         //el bucle de animacion gobierna el redibujado de los objetos en
         //el jpanel1
-        //primero borro todo lo que hay en el buffer
-        Graphics2D g2 =(Graphics2D) buffer.getGraphics();
-        g2.setColor(Color.black);
+        Graphics2D g2 = (Graphics2D) buffer.getGraphics();
+        g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, ANCHOPANTALLA, ALTOPANTALLA);
         
-        ////////////////////////////////////////////////////////////////////////
-        //redibujamos cada elemento en su nueva posicion
+        ////////////////////////////////////////////////////////////
         
         //contador++;
-        
-        //pinto la nave
+        miDisparo.mueve();
+        g2.drawImage(miDisparo.imagen, miDisparo.getX(), miDisparo.getY(),null);
+        //redibujamos cada elemento en su nueva posicion en el buffer
         miNave.mueve();
         g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
         
         
         
-        ////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////
         
         //dibujo de golpe el buffer sobre el jpanel1
-        g2 =(Graphics2D) jPanel1.getGraphics();
+        g2 = (Graphics2D) jPanel1.getGraphics();
         g2.drawImage(buffer, 0, 0, null);
         
         
-        
-    
     }
 
     
@@ -114,11 +112,13 @@ public class VentanaJuego extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setPreferredSize(new java.awt.Dimension(600, 600));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 785, Short.MAX_VALUE)
+            .addGap(0, 600, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,6 +145,9 @@ public class VentanaJuego extends javax.swing.JFrame {
                 break;
             case KeyEvent.VK_RIGHT : miNave.setPulsadoDerecha(true);
                 break;
+            case KeyEvent.VK_SPACE : miDisparo.setDisparado(true);
+            miDisparo.posicionaDisparo(miNave);
+                break;
         }
     }//GEN-LAST:event_formKeyPressed
 
@@ -153,6 +156,8 @@ public class VentanaJuego extends javax.swing.JFrame {
             case KeyEvent.VK_LEFT : miNave.setPulsadoIzquierda(false);
                 break;
             case KeyEvent.VK_RIGHT : miNave.setPulsadoDerecha(false);
+                break;
+            case KeyEvent.VK_SPACE : miDisparo.setDisparado(false);
                 break;
         }
     }//GEN-LAST:event_formKeyReleased

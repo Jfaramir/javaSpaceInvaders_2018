@@ -1,5 +1,5 @@
 /*
- * la nave del juego
+ * La nave del juego
  */
 package codigo;
 
@@ -9,24 +9,27 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author Juan Pablo Carpio
+ * @author Joaquin Sierra
  */
 public class Nave {
     
     public Image imagen = null;
-    public int x =0;
-    public int y = 0;
+    public int x=0;
+    public int y=0;
     
     private boolean pulsadoIzquierda = false;
     private boolean pulsadoDerecha = false;
     
+    private int anchoPantalla;
     
-    public Nave(){
+    public Nave(int _anchoPantalla){
         try{
-            imagen = ImageIO.read(getClass().getResource("/imagenes/nave.png"));
+            imagen =  ImageIO.read(getClass().getResource("/imagenes/nave.png"));
         }
-        catch(IOException ramon){
+        catch (IOException ramon){
+            
         }
+        this.anchoPantalla= _anchoPantalla;
     }
 
     public boolean isPulsadoIzquierda() {
@@ -44,13 +47,14 @@ public class Nave {
     public void setPulsadoDerecha(boolean pulsadoDerecha) {
         this.pulsadoDerecha = pulsadoDerecha;
     }
-    
-    //metodo para mover la nave
+    //metodo para mover a la nave
     public void mueve(){
-        if (pulsadoIzquierda && x > 0){
-            x--;
-        }
-        
-        //TODO: falta mover a la derecha
+        if(pulsadoIzquierda && x>0){
+        x--;
     }
+        if(pulsadoDerecha && x<anchoPantalla - imagen.getWidth(null)){
+        x++;
+        //TODO: falta mover al lado derecho
+    }
+}
 }
